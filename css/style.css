@@ -3,7 +3,7 @@
     .contenedor {
         display: flex;
         flex-direction: column;
-        height: 600px;
+        height: 400px;
         width: 500px;
         border: 20px solid transparent;
         box-sizing: border-box;
@@ -16,7 +16,7 @@
     .contenedor {
         display: flex;
         flex-direction: column;
-        height: 600px;
+        height: 400px;
         width: 700px;
         border: 20px solid transparent;
         box-sizing: border-box;
@@ -29,7 +29,7 @@
     .contenedor {
         display: flex;
         flex-direction: column;
-        height: 600px;
+        height: 400px;
         width: 1000px;
         border: 20px solid transparent;
         box-sizing: border-box;
