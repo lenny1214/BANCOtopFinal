@@ -16,7 +16,7 @@
     .contenedor {
         display: flex;
         flex-direction: column;
-        height: 900px;
+        height: 600px;
         width: 700px;
         border: 20px solid transparent;
         box-sizing: border-box;
@@ -29,8 +29,8 @@
     .contenedor {
         display: flex;
         flex-direction: column;
-        height: 1100px;
-        width: 900px;
+        height: 600px;
+        width: 1000px;
         border: 20px solid transparent;
         box-sizing: border-box;
         border-radius: 30px;
