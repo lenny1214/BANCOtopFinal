@@ -117,7 +117,7 @@ background-color: #DDD6B9;
 
 h2 {
     text-align: center;
-    color: #e6b458;
+    color: #DDD6B9;
 }
 
 
@@ -144,7 +144,7 @@ input[type="password"] {
 
 
 input[type="submit"] {
-    background-color: #28a745;
+    background-color: #1d8135;
     color: #fff;
     padding: 10px 15px;
     border: none;
