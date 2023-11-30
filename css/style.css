@@ -58,7 +58,7 @@ body {
 /* Agrega el siguiente estilo para pantallas de ordenador en tu CSS existente */
 @media only screen and (min-width: 1025px) {
     .login-container {
-        width: 60%; /* Ajusta el porcentaje según tus necesidades */
+        width: 80%; /* Ajusta el porcentaje según tus necesidades */
         margin: 0 auto; /* Centra horizontalmente */
     }
 }
