@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Escapar las entradas del formulario para evitar inyecciones SQL
     $dni = $_POST['dni'];
-    $nombre = $_POST['nombre_usuario'];
+    $nombre = $_POST['nombre'];
     $apellido = $_POST['apellido'];
     $email = $_POST['email'];
     $fecha_nacimiento = $_POST['fecha_nacimiento'];
@@ -100,8 +100,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <header>
     <!-- place navbar here -->
   </header>
-  <main>
-  <div class="contenedor">
+  <main>  
+    <div class="contenedor">
+
+
+  <div class="container login-container">
 
 
   <h2 class="text-center">Crear cuenta</h2>
