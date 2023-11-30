@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- place navbar here -->
   </header>
   <main>
-  <div class="container login-container">
+  <div class="contenedor">
 
 
   <h2 class="text-center">Crear cuenta</h2>
