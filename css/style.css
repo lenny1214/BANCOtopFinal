@@ -1,12 +1,6 @@
-
-
-
 /* Estilos para teléfonos (hasta 767px) */
 @media only screen and (max-width: 767px) {
- 
-
-
-    .contenedor{
+    .contenedor {
         display: flex;
         flex-direction: column;
         height: 500px;
@@ -17,38 +11,58 @@
     }
 }
 
-
-
-
-/*Pantalla de ORDENADOR*/
-@media only screen and (min-width: 1025px){
-    .contenedor{
-      height: 500px;
-      width: 1000px;
-      border: 20px solid transparent;
-      box-sizing: border-box;
-      border-radius: 30px;
-      
+/* Pantalla de ORDENADOR */
+@media only screen and (min-width: 1025px) {
+    .contenedor {
+        height: 500px;
+        width: 60%; /* Ajusta el porcentaje según tus necesidades */
+        margin: 0 auto; /* Centra horizontalmente */
+        border: 20px solid transparent;
+        box-sizing: border-box;
+        border-radius: 30px;
     }
 }
 
-
-
-
 /* Estilos para tablets (entre 768px y 1024px) */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
-    .contenedor{
+    .contenedor {
         display: flex;
         flex-direction: column;
         height: 600px;
-        width: 700px;
+        width: 500px;
         border: 20px solid transparent;
         border-image: url('../img/Tablet2.png') 30 round;
         box-sizing: border-box;
         border-radius: 30px;
- 
     }
 }
+
+body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FCD0B4; /* Color de fondo gris claro */
+}
+
+.login-container {
+    background-color: rgb(29, 77, 34);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgb(14, 73, 22);
+    width: 80%;
+    max-width: 400px;
+}
+
+/* Agrega el siguiente estilo para pantallas de ordenador en tu CSS existente */
+@media only screen and (min-width: 1025px) {
+    .login-container {
+        width: 60%; /* Ajusta el porcentaje según tus necesidades */
+        margin: 0 auto; /* Centra horizontalmente */
+    }
+}
+
 
 
 
