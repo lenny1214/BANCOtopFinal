@@ -16,10 +16,9 @@
     .contenedor {
         display: flex;
         flex-direction: column;
-        height: 600px;
-        width: 500px;
+        height: 900px;
+        width: 700px;
         border: 20px solid transparent;
-        border-image: url('../img/Tablet2.png') 30 round;
         box-sizing: border-box;
         border-radius: 30px;
     }
@@ -30,8 +29,8 @@
     .contenedor {
         display: flex;
         flex-direction: column;
-        height: 600px;
-        width: 500px;
+        height: 1100px;
+        width: 900px;
         border: 20px solid transparent;
         box-sizing: border-box;
         border-radius: 30px;
