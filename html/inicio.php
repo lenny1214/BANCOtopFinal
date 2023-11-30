@@ -11,7 +11,7 @@ if (!isset($_SESSION['nombre_usuario'])) {
 
 // Verifica si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
-  // Destruye la sesión y redirige al inicio de sesión
+  // No te deja acceder al index.php ya que no hay ninguna sesión iniciada
   session_destroy();
   header('Location: login.php');
   exit();
