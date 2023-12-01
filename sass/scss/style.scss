@@ -1,0 +1,42 @@
+@use'base';
+body{
+    color:red;
+}
+@import url("..margin.scss");
+@import url("../header.scss");
+
+
+/*MIXIN*/
+@mixin large-text{
+    font-family: Arial;
+    font-size: 20px;
+    font-weight: bold;
+    color: green;
+}
+
+.titulos{
+    @include large-text;
+    padding: 4px;
+    margin-top: 10px;
+}
+
+.golden{
+    background-color: gold;
+    p{
+        color: green;
+    }
+}
+
+/*MODULOS*/
+
+.inverse{
+    background-color:pink;
+    color:white;
+}
+
+$font-stack:Helvetica, sans-serif;
+$primary-color:green;
+body{
+    font: 100% $font-stack;
+    color: pink;
+}
