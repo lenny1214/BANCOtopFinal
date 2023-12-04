@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Nombre de tu Banca</a>
+                <a class="navbar-brand" href="#">IlerBank</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -61,6 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Generar IBAN</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Pedir Préstamo</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Ver Saldo</a>
