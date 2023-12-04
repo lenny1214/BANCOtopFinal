@@ -96,9 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo_movimiento']) &&
                             <a class="nav-link" href="prestamo.php">Pedir Préstamo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="versaldo.php">Ver Saldo</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="chat.php">Chat</a>
                         </li>
                     </ul>

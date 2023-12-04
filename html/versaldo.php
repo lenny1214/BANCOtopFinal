@@ -87,9 +87,6 @@ $conn->close();
                             <a class="nav-link" href="prestamo.php">Pedir Préstamo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="versaldo.php">Ver Saldo</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="chat.php">Chat</a>
                         </li>
                     </ul>
