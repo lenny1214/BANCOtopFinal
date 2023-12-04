@@ -85,7 +85,7 @@
 
         if ($result && $result->num_rows > 0) {
           $_SESSION['nombre_usuario'] = $nombre_usuario;
-          header('Location: inicio.php');
+          header('Location: versaldo.php');
           exit();
         } else {
           $error_message = "Credenciales incorrectas.";
