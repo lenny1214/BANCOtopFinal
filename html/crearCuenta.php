@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Escapar las entradas del formulario para evitar inyecciones SQL
   $dni = $_POST['dni'];
-  $nombre = $_POST['nombre'];
+  $nombre = $_POST['nombre_usuario'];
   $apellido = $_POST['apellido'];
   $email = $_POST['email'];
   $fecha_nacimiento = $_POST['fecha_nacimiento'];
