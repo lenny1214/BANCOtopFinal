@@ -100,11 +100,9 @@ $conn->close();
 
     <main>
     <h2>Bienvenido,
-      <?php echo $_SESSION['nombre_usuario']; ?>!
+      <?php echo $_SESSION['nombre_usuario']. ".Hoy es:" . date ('d \d\e F \d\e Y'); ?>!
     </h2>
-    <form method="post" action="">
-      <input type="submit" name="cerrar_sesion" value="Cerrar Sesión">
-    </form>    
+    
         <div style="padding: 16px;">
             <h2>Saldo Actual</h2>
             <p>Saldo: <?php echo $saldo; ?></p>

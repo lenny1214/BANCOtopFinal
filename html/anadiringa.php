@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo_movimiento']) &&
     // Obtener datos del formulario
     $tipo_movimiento = $_POST['tipo_movimiento'];
     $monto = $_POST['monto'];
-
     // Insertar movimiento en la base de datos
     $insertMovimientoQuery = "INSERT INTO movimientos (nombre_usuario, tipo_movimiento, monto) 
                             VALUES ('{$_SESSION['nombre_usuario']}', '$tipo_movimiento', $monto)";
@@ -118,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo_movimiento']) &&
                 <br>
 
                 <label for="monto">Monto:</label>
-                <input type="number" id="monto" name="monto" required>
+                <input type="text" id="monto" name="monto" step="0.01" required>
                 <br>
 
                 <input type="submit" value="Guardar Movimiento">
