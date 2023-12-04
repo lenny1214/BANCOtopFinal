@@ -45,7 +45,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
 
 <body>
   <header>
-    <!-- place navbar here -->
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Nombre de tu Banca</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Añadir Ingreso/Gasto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Generar IBAN</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Ver Saldo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Chat</a>
+                        </li>
+                    </ul>
+                </div>
+                <form class="d-flex" method="post" action="">
+                    <input class="btn btn-outline-danger" type="submit" name="cerrar_sesion" value="Cerrar Sesión">
+                </form>
+            </div>
+        </nav>
   </header>
   <main>
     <h2>Bienvenido,
