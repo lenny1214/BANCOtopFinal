@@ -47,7 +47,7 @@
         $host = 'localhost';
         $dbname = 'ilerbank';
         $username = 'root';
-        $password = '';
+        $password = 'Ign@fervig12';
         $port = 3306;
 
 
