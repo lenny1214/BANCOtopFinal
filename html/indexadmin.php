@@ -1,60 +1,70 @@
 <?php
 session_start();
 
-// Verificar si el usuario no ha iniciado sesión
-if (!isset($_SESSION['nombre_usuario'])) {
+// Verifica si el usuario no ha iniciado sesión o no es administrador
+if (!isset($_SESSION['nombre_usuario']) || !isset($_SESSION['es_administrador']) || $_SESSION['es_administrador'] != 1) {
     header('Location: login.php');
     exit();
 }
 
-// Crear la conexión a la base de datos
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "ilerbank";
+// Conexión a la base de datos
+$conn = new mysqli('localhost', 'root', '', 'ilerbank');
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar la conexión
 if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
+    die("Error de conexión: " . $conn->connect_error);
 }
 
-// Obtener el rol del usuario (asumir que hay una columna 'rol' en la tabla 'usuarios')
-$nombreUsuario = $_SESSION['nombre_usuario'];
-$sqlRol = "SELECT rol FROM usuarios WHERE nombre_usuario = '$nombreUsuario'";
-$resultRol = $conn->query($sqlRol);
+// Obtener todos los usuarios
+$usuariosQuery = "SELECT * FROM usuarios";
+$usuariosResult = $conn->query($usuariosQuery);
 
-if ($resultRol->num_rows > 0) {
-    $row = $resultRol->fetch_assoc();
-    $rolUsuario = $row['rol'];
-
-    if ($rolUsuario === 'admin') {
-        // El usuario es un administrador, mostrar datos de todos los usuarios
-        $sqlMostrarUsuarios = "SELECT * FROM usuarios";
-        $resultMostrarUsuarios = $conn->query($sqlMostrarUsuarios);
-
-        if ($resultMostrarUsuarios->num_rows > 0) {
-            echo "<h2>Datos de todos los usuarios:</h2>";
-            echo "<table border='1'>";
-            echo "<tr><th>Nombre</th><th>Apellido</th><th>Email</th><th>...</th></tr>";
-
-            while ($row = $resultMostrarUsuarios->fetch_assoc()) {
-                echo "<tr><td>" . $row['nombre_usuario'] . "</td><td>" . $row['apellido'] . "</td><td>" . $row['email'] . "</td><td>...</td></tr>";
-            }
-
-            echo "</table>";
-        } else {
-            echo "No hay usuarios registrados.";
-        }
-    } else {
-        // El usuario no es un administrador, redirigir a la página principal
-        header('Location: indexadmin.php');
-        exit();
-    }
-} else {
-    echo "Error al obtener el rol del usuario.";
-}
-
+// Cerrar conexión
 $conn->close();
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Resto del código HTML y Bootstrap -->
+
+<body>
+    <header>
+        <!-- Navbar -->
+        <!-- ... -->
+    </header>
+
+    <main>
+        <h2>Bienvenido, <?php echo $_SESSION['nombre_usuario']; ?> (Admin)</h2>
+
+        <div style="padding: 16px;">
+            <h2>Lista de Usuarios</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre de Usuario</th>
+                        <th>Apellido</th>
+                        <th>DNI</th>
+                        <!-- Agregar más columnas según sea necesario -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    while ($usuario = $usuariosResult->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>{$usuario['nombre_usuario']}</td>";
+                        echo "<td>{$usuario['apellido']}</td>";
+                        echo "<td>{$usuario['dni']}</td>";
+                        // Agregar más columnas según sea necesario
+                        echo "</tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Resto del código HTML y Bootstrap -->
+
+</body>
+
+</html>

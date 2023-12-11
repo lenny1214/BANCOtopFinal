@@ -91,6 +91,16 @@
           $error_message = "Credenciales incorrectas.";
         }
 
+        // Verificar si es administrador
+$queryAdmin = "SELECT * FROM usuarios WHERE nombre_usuario = '$nombre_usuario' AND contrasena = '$contrasena' AND es_administrador = 1";
+$resultAdmin = $conn->query($queryAdmin);
+
+if ($resultAdmin && $resultAdmin->num_rows > 0) {
+    $_SESSION['nombre_usuario'] = $nombre_usuario;
+    header('Location: indexadmin.php');
+    exit();
+}
+
 
         $conn->close();
       }

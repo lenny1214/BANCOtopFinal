@@ -34,15 +34,14 @@ CREATE TABLE movimientos (
     FOREIGN KEY (nombre_usuario) REFERENCES usuarios(nombre_usuario)
 );
 
--- Tabla de usuarioAdmin
-CREATE TABLE usuarioAdmin (
-    username VARCHAR(255) PRIMARY KEY,
-    contraseña VARCHAR(255)
-);
 
--- Insertar un usuario administrador de ejemplo
-INSERT INTO usuarioAdmin (username, contraseña)
-VALUES ('admin', 'admin123');
+ALTER TABLE usuarios
+ADD COLUMN es_administrador BOOLEAN NOT NULL DEFAULT 0,
+MODIFY COLUMN contrasena VARCHAR(255) NOT NULL;
+
+INSERT INTO usuarios (nombre_usuario, apellido, dni, email, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, contrasena, iban, es_administrador)
+VALUES ('admin', 'Admin', '12345678A', 'admin@example.com', '1980-01-01', 'Admin Street', '12345', 'Admin City', 'Admin Province', 'admin123', 'ES0123456789012345678901', 1);
+
 
 -- Insertar un usuario normal de ejemplo
 INSERT INTO usuarios (nombre_usuario, apellido, dni, email, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, contrasena) 

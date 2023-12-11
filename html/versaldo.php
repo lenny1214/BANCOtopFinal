@@ -26,6 +26,8 @@ if ($saldoResult) {
     $saldo = 0;
 }
 
+ES01101110011010010110001101101111011011100000
+ES01110100011000010111010001101111010000000000
 // Verifica si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
   // No te deja acceder al index.php ya que no hay ninguna sesión iniciada

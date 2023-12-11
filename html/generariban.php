@@ -123,7 +123,7 @@ if ($resultEmail->num_rows > 0) {
 // Función para generar el IBAN
 function generarIBAN($email)
 {
-    $primerosCinco = substr($email, 0, 5);
+    $primerosCinco = substr($email, 0, 3);
     $codigoBinario = '';
     for ($i = 0; $i < strlen($primerosCinco); $i++) {
         $codigoBinario .= sprintf("%08b", ord($primerosCinco[$i]));
