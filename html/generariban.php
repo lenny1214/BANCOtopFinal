@@ -80,12 +80,14 @@ if ($resultEmail->num_rows > 0) {
 
 <body>
     <header>
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <header>
+       <!-- Navbar -->
+       <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="versaldo.php">IlerBank</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -96,7 +98,12 @@ if ($resultEmail->num_rows > 0) {
                         <li class="nav-item">
                             <a class="nav-link" href="generariban.php">Generar IBAN</a>
                         </li>
-                        <!-- Otros elementos del menú -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="prestamo.php">Pedir Préstamo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="chat.php">Chat</a>
+                        </li>
                     </ul>
                 </div>
                 <form class="d-flex" method="post" action="">
@@ -104,6 +111,7 @@ if ($resultEmail->num_rows > 0) {
                 </form>
             </div>
         </nav>
+   
     </header>
     <main>
         <div class="container mt-3">

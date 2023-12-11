@@ -36,8 +36,19 @@ CREATE TABLE movimientos (
 
 
 ALTER TABLE usuarios
-ADD COLUMN es_administrador BOOLEAN NOT NULL DEFAULT 0,
-MODIFY COLUMN contrasena VARCHAR(255) NOT NULL;
+ADD COLUMN es_administrador BOOLEAN NOT NULL DEFAULT 0;
+
+
+-- Actualizar el usuario 'admin' para que sea administrador
+UPDATE usuarios 
+SET 
+    es_administrador = 1
+WHERE
+    nombre_usuario = 'admin';
+
+-- Añadir columna de saldo a la tabla de usuarios
+ALTER TABLE usuarios
+ADD COLUMN saldo DECIMAL(10, 2) NOT NULL DEFAULT 0;
 
 INSERT INTO usuarios (nombre_usuario, apellido, dni, email, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, contrasena, iban, es_administrador)
 VALUES ('admin', 'Admin', '12345678A', 'admin@example.com', '1980-01-01', 'Admin Street', '12345', 'Admin City', 'Admin Province', 'admin123', 'ES0123456789012345678901', 1);

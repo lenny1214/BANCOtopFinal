@@ -7,53 +7,42 @@ if (!isset($_SESSION['nombre_usuario'])) {
     exit();
 }
 
-// Verifica si se ha enviado el formulario
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
-    // No te deja acceder al index.php ya que no hay ninguna sesión iniciada
-    session_destroy();
-    header('Location: login.php');
-    exit();
-  }
+// Conexión a la base de datos
+$conn = new mysqli('localhost', 'root', '', 'ilerbank');
+
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
+}
 
 // Verifica si se ha enviado el formulario
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo_movimiento']) && isset($_POST['monto'])) {
-    // Conexión a la base de datos (ajustar según tus datos)
-    $conn = new mysqli('localhost', 'root', '', 'ilerbank');
-
-    if ($conn->connect_error) {
-        die("Error de conexión: " . $conn->connect_error);
-    }
-
-    // Obtener datos del formulario
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_movimiento'])) {
     $tipo_movimiento = $_POST['tipo_movimiento'];
     $monto = $_POST['monto'];
-    // Insertar movimiento en la base de datos
-    $insertMovimientoQuery = "INSERT INTO movimientos (nombre_usuario, tipo_movimiento, monto) 
-                            VALUES ('{$_SESSION['nombre_usuario']}', '$tipo_movimiento', $monto)";
-    $result = $conn->query($insertMovimientoQuery);
 
-
-
-    // Verificar el resultado de la consulta
-    if ($result) {
-        echo "Movimiento registrado correctamente.";
-    } else {
-        echo "Error al registrar el movimiento. Por favor, inténtelo de nuevo. Error: " . $conn->error;
+    // Asegúrate de que el tipo de movimiento sea válido
+    if ($tipo_movimiento !== 'ingreso' && $tipo_movimiento !== 'gasto') {
+        echo "Tipo de movimiento no válido.";
+        exit();
     }
-   
 
-    // Cerrar conexión
-    $conn->close();
+    // Insertar movimiento en la tabla movimientos
+    $insertMovimientoQuery = "INSERT INTO movimientos (nombre_usuario, tipo_movimiento, monto) VALUES ('{$_SESSION['nombre_usuario']}', '$tipo_movimiento', $monto)";
+    $conn->query($insertMovimientoQuery);
+
+    // Actualizar saldo del usuario en la tabla usuarios
+    $updateSaldoQuery = "UPDATE usuarios SET saldo = saldo + CASE WHEN '$tipo_movimiento' = 'ingreso' THEN $monto ELSE -$monto END WHERE nombre_usuario = '{$_SESSION['nombre_usuario']}'";
+    $conn->query($updateSaldoQuery);
 }
+
+// Cerrar conexión
+$conn->close();
 ?>
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 
-
-<head>
-  <title>Movimientos</title>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
@@ -69,13 +58,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo_movimiento']) &&
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
     integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
     </script>
-</head>
-
 
 <body>
-  <header>
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<header>
+       <!-- Navbar -->
+       <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="versaldo.php">IlerBank</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -104,32 +91,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tipo_movimiento']) &&
                 </form>
             </div>
         </nav>
-  </header>
-  <main>
-        <div style="padding: 16px;">
-            <h2>Añadir Saldo / Ingreso-Gasto</h2>
-            <form method="post" action="">
-                <label for="tipo_movimiento">Tipo de Movimiento:</label>
-                <select name="tipo_movimiento" id="tipo_movimiento" required>
-                    <option value="ingreso">Ingreso</option>
-                    <option value="gasto">Gasto</option>
-                </select>
-                <br>
-
-                <label for="monto">Monto:</label>
-                <input type="text" id="monto" name="monto" step="0.01" required>
-                <br>
-
-                <input type="submit" value="Guardar Movimiento">
-            </form>
-        </div>
-    </main>
-  <footer>
-    <!-- place footer here -->
-  </footer>
-
-
+    </header>
+    <!-- Contenido del cuerpo de la página -->
+    <form method="post" action="">
+        <label for="tipo_movimiento">Tipo de Movimiento:</label>
+        <select name="tipo_movimiento" id="tipo_movimiento" required>
+            <option value="ingreso">Ingreso</option>
+            <option value="gasto">Gasto</option>
+        </select>
+        <br>
+        <label for="monto">Monto:</label>
+        <input type="number" name="monto" id="monto" step="0.01" required>
+        <br>
+        <input type="submit" name="registrar_movimiento" value="Registrar Movimiento">
+    </form>
 </body>
-
 
 </html>

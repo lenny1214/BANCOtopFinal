@@ -41,69 +41,58 @@
 
 
       <?php
-      // Verifica si se ha enviado el formulario
-      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Conexión a la base de datos
-        $host = 'localhost';
-        $dbname = 'ilerbank';
-        $username = 'root';
-        $password = '';
-        $port = 3306;
+     session_start();
 
+// Verifica si se ha enviado el formulario
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Conexión a la base de datos
+    $host = 'localhost';
+    $dbname = 'ilerbank';
+    $username = 'root';
+    $password = '';
+    $port = 3306;
 
-        $conn = new mysqli($host, $username, $password, $dbname, $port);
+    $conn = new mysqli($host, $username, $password, $dbname, $port);
 
-        if ($conn->connect_error) {
-          die("Error de conexión: " . $conn->connect_error);
-        }
-      }
-      session_start();
+    if ($conn->connect_error) {
+        die("Error de conexión: " . $conn->connect_error);
+    }
 
+    $nombre_usuario = $conn->real_escape_string($_POST['nombre_usuario']);
+    $contrasena = $conn->real_escape_string($_POST['contrasena']);
 
-      if (isset($_SESSION['nombre_usuario'])) {
-        header('Location: login.php');
+    // Verificar si es administrador
+    $queryAdmin = "SELECT * FROM usuarios WHERE nombre_usuario = '$nombre_usuario' AND contrasena = '$contrasena' AND es_administrador = 1";
+    $resultAdmin = $conn->query($queryAdmin);
+
+    if ($resultAdmin && $resultAdmin->num_rows > 0) {
+        $_SESSION['nombre_usuario'] = $nombre_usuario;
+        $_SESSION['es_administrador'] = 1;
+        header('Location: indexadmin.php');
         exit();
-      }
+    }
 
+    // Verificar si es un usuario normal
+    $query = "SELECT * FROM usuarios WHERE nombre_usuario = '$nombre_usuario' AND contrasena = '$contrasena'";
+    $result = $conn->query($query);
 
-      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $conn = new mysqli('localhost', 'root', '', 'ilerbank');
+    if ($result && $result->num_rows > 0) {
+        $_SESSION['nombre_usuario'] = $nombre_usuario;
+        header('Location: versaldo.php');
+        exit();
+    } else {
+        $error_message = "Credenciales incorrectas.";
+    }
 
+    $conn->close();
+}
 
-        if ($conn->connect_error) {
-          die("Error de conexión: " . $conn->connect_error);
-        }
-
-
-        $nombre_usuario = $conn->real_escape_string($_POST['nombre_usuario']);
-        $contrasena = $conn->real_escape_string($_POST['contrasena']);
-
-
-        $query = "SELECT * FROM usuarios WHERE nombre_usuario = '$nombre_usuario' AND contrasena = '$contrasena'";
-        $result = $conn->query($query);
-
-
-        if ($result && $result->num_rows > 0) {
-          $_SESSION['nombre_usuario'] = $nombre_usuario;
-          header('Location: versaldo.php');
-          exit();
-        } else {
-          $error_message = "Credenciales incorrectas.";
-        }
-
-        // Verificar si es administrador
-$queryAdmin = "SELECT * FROM usuarios WHERE nombre_usuario = '$nombre_usuario' AND contrasena = '$contrasena' AND es_administrador = 1";
-$resultAdmin = $conn->query($queryAdmin);
-
-if ($resultAdmin && $resultAdmin->num_rows > 0) {
-    $_SESSION['nombre_usuario'] = $nombre_usuario;
-    header('Location: indexadmin.php');
+// Verifica si el usuario ya ha iniciado sesión
+if (isset($_SESSION['nombre_usuario'])) {
+    header('Location: versaldo.php');
     exit();
 }
 
-
-        $conn->close();
-      }
       ?>
 
 
