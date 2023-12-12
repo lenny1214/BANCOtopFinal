@@ -54,7 +54,7 @@ $conn->close();
        <!-- Navbar -->
        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="versaldo.php">IlerBank</a>
+                <a class="navbar-brand" href="indexadmin.php">IlerBank</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -63,10 +63,10 @@ $conn->close();
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="prestamo.php">Pedir Préstamo</a>
+                            <a class="nav-link" href="aprobar_prestamo.php">Ver Solicitudes de Préstamo</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="chat.php">Chat</a>
+                            <a class="nav-link" href="chatadmin.php">Chat</a>
                         </li>
                     </ul>
                 </div>

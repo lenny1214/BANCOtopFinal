@@ -14,57 +14,73 @@ if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
-// Obtener información del usuario
-$username = $_SESSION['nombre_usuario'];
-$query = "SELECT saldo FROM usuarios WHERE nombre_usuario = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param('s', $username);
-$stmt->execute();
-$stmt->bind_result($saldo);
-$stmt->fetch();
-$stmt->close();
+
+// Obtener saldo del usuario
+$saldoQuery = "SELECT SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE -monto END) AS saldo 
+               FROM movimientos WHERE nombre_usuario = ?";
+$stmtSaldo = $conn->prepare($saldoQuery);
+$stmtSaldo->bind_param('s', $username);
+$stmtSaldo->execute();
+$stmtSaldo->bind_result($saldo);
+$stmtSaldo->fetch();
+$stmtSaldo->close();
 
 // Verificar si el saldo es mayor que 1000 para permitir solicitar el préstamo
-if ($saldo < 1000) {
-    header('Location: versaldo.php'); // Redirigir a la página de saldo si el saldo es insuficiente
+if ($saldo >= 1000) {
+    // Si el saldo es suficiente, redirige a prestamo.php
+    header('Location: versaldo.php');
     exit();
 }
 
+
+
 // Verifica si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar_prestamo'])) {
-    $cantidad = $_POST['cantidad'];
-    $concepto = $_POST['concepto'];
-    $amortizacion_meses = $_POST['amortizacion_meses'];
+  $cantidad = $_POST['cantidad'];
+  $concepto = $_POST['concepto'];
+  $amortizacion_meses = $_POST['amortizacion_meses'];
 
-    // Asegúrate de que los campos no estén vacíos
-    if (empty($cantidad) || empty($concepto) || empty($amortizacion_meses)) {
-        $error_message = "Todos los campos son obligatorios.";
-    } else {
-        // Calcular interés del 0.7%
-        $interes = 0.007; // 0.7%
+  // Asegúrate de que los campos no estén vacíos
+  if (empty($cantidad) || empty($concepto) || empty($amortizacion_meses)) {
+      $error_message = "Todos los campos son obligatorios.";
+  } else {
+      // Calcular interés del 0.7%
+      $interes = 0.007; // 0.7%
 
-        // Calcular la cuota mensual del préstamo
-        $cuota_mensual = ($cantidad * $interes) / (1 - pow(1 + $interes, -$amortizacion_meses));
+      // Calcular la cuota mensual del préstamo
+      $cuota_mensual = ($cantidad * $interes) / (1 - pow(1 + $interes, -$amortizacion_meses));
 
-        // Insertar préstamo en la tabla prestamos
-        $insertPrestamoQuery = "INSERT INTO prestamos (nombre_usuario, cantidad, concepto, amortizacion_meses, cuota_mensual) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($insertPrestamoQuery);
-        $stmt->bind_param('sissd', $username, $cantidad, $concepto, $amortizacion_meses, $cuota_mensual);
-        $stmt->execute();
-        $stmt->close();
+      // Insertar préstamo en la tabla prestamos
+      $id_administrador = 1;  // ID del administrador (puedes cambiarlo según tu lógica)
+      $estado_aprobacion = 'Pendiente'; // El préstamo se establece como pendiente de aprobación
 
-        // Actualizar saldo del usuario en la tabla usuarios
-        $updateSaldoQuery = "UPDATE usuarios SET saldo = saldo + $cantidad WHERE nombre_usuario = ?";
-        $stmt = $conn->prepare($updateSaldoQuery);
-        $stmt->bind_param('s', $username);
-        $stmt->execute();
-        $stmt->close();
+      $insertPrestamoQuery = "INSERT INTO prestamos (id_administrador, nombre_usuario, cantidad, concepto, amortizacion_meses, cuota_mensual, estado_aprobacion) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      $stmt = $conn->prepare($insertPrestamoQuery);
+      $stmt->bind_param('isissds', $id_administrador, $username, $cantidad, $concepto, $amortizacion_meses, $cuota_mensual, $estado_aprobacion);
+      $stmt->execute();
+      $stmt->close();
 
-        // Redirigir o mostrar mensaje de éxito, según tus necesidades
-        header('Location: versaldo.php');
-        exit();
-    }
+      // Actualizar saldo del usuario en la tabla usuarios
+      $updateSaldoQuery = "UPDATE usuarios SET saldo = saldo + $cantidad WHERE nombre_usuario = ?";
+      $stmt = $conn->prepare($updateSaldoQuery);
+      $stmt->bind_param('s', $username);
+      $stmt->execute();
+      $stmt->close();
+
+      // Redirigir o mostrar mensaje de éxito, según tus necesidades
+      header('Location: versaldo.php');
+      exit();
+  }
 }
+
+// Obtener detalles de todos los préstamos del usuario
+$prestamosQuery = "SELECT * FROM prestamos WHERE nombre_usuario = ? ORDER BY fecha_solicitud DESC";
+$stmtPrestamos = $conn->prepare($prestamosQuery);
+$stmtPrestamos->bind_param('s', $username);
+$stmtPrestamos->execute();
+$prestamosResult = $stmtPrestamos->get_result();
+$stmtPrestamos->close();
+
 
 // Cerrar conexión
 $conn->close();
@@ -94,8 +110,6 @@ $conn->close();
     <!-- Navbar -->
     <!-- ... Tu código navbar ... -->
 </header>
-
-<!-- Contenido del cuerpo de la página -->
 <div class="container">
     <?php if (isset($error_message)): ?>
         <div class="alert alert-danger" role="alert">
@@ -103,7 +117,7 @@ $conn->close();
         </div>
     <?php endif; ?>
 
-    <form method="post" action="">
+    <form method="post" action="versaldo.php"> <!-- Aquí está el cambio -->
         <label for="cantidad">Cantidad:</label>
         <input type="number" name="cantidad" id="cantidad" step="0.01" required>
         <br>
