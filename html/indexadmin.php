@@ -1,12 +1,19 @@
 <?php
 session_start();
 
-// Verifica si el usuario no ha iniciado sesión o no es administrador
-if (!isset($_SESSION['nombre_usuario']) || !isset($_SESSION['es_administrador']) || $_SESSION['es_administrador'] != 1) {
-    header('Location: versaldo.php');
+// Verifica si se ha enviado el formulario de cerrar sesión
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
+    // Cierra la sesión
+    session_destroy();
+    header('Location: login.php');
     exit();
 }
 
+// Verifica si el usuario no ha iniciado sesión
+if (!isset($_SESSION['nombre_usuario'])) {
+    header('Location: login.php');
+    exit();
+}
 // Conexión a la base de datos
 $conn = new mysqli('localhost', 'root', '', 'ilerbank');
 

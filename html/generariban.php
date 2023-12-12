@@ -1,12 +1,19 @@
 <?php
 session_start();
 
+// Verifica si se ha enviado el formulario de cerrar sesión
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
+    // Cierra la sesión
+    session_destroy();
+    header('Location: login.php');
+    exit();
+}
+
 // Verifica si el usuario no ha iniciado sesión
 if (!isset($_SESSION['nombre_usuario'])) {
     header('Location: login.php');
     exit();
 }
-
 // Verifica si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
     // Cierra la sesión y redirige a la página de inicio de sesión

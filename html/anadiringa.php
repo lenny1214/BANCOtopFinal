@@ -1,11 +1,22 @@
 <?php
 session_start();
 
+// Verifica si se ha enviado el formulario de cerrar sesión
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
+    // Cierra la sesión
+    session_destroy();
+    header('Location: login.php');
+    exit();
+}
+
 // Verifica si el usuario no ha iniciado sesión
 if (!isset($_SESSION['nombre_usuario'])) {
     header('Location: login.php');
     exit();
 }
+
+// Inicializa el mensaje a mostrar
+$mensaje_exito = '';
 
 // Conexión a la base de datos
 $conn = new mysqli('localhost', 'root', '', 'ilerbank');
@@ -32,6 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_movimiento'
     // Actualizar saldo del usuario en la tabla usuarios
     $updateSaldoQuery = "UPDATE usuarios SET saldo = saldo + CASE WHEN '$tipo_movimiento' = 'ingreso' THEN $monto ELSE -$monto END WHERE nombre_usuario = '{$_SESSION['nombre_usuario']}'";
     $conn->query($updateSaldoQuery);
+
+    // Establece el mensaje de éxito
+    $mensaje_exito = "El movimiento se ha registrado correctamente.";
 }
 
 // Cerrar conexión
@@ -61,6 +75,7 @@ $conn->close();
 
 <body>
 <header>
+
        <!-- Navbar -->
        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -93,6 +108,13 @@ $conn->close();
         </nav>
     </header>
     <!-- Contenido del cuerpo de la página -->
+    <div class="container">
+    <?php if (!empty($mensaje_exito)): ?>
+        <div class="alert alert-success" role="alert">
+            <?php echo $mensaje_exito; ?>
+        </div>
+    <?php endif; ?>
+
     <form method="post" action="">
         <label for="tipo_movimiento">Tipo de Movimiento:</label>
         <select name="tipo_movimiento" id="tipo_movimiento" required>

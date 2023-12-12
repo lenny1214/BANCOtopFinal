@@ -1,71 +1,69 @@
 <?php
 // Verifica si se ha enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Conexión a la base de datos
-  $host = 'localhost';
-  $dbname = 'ilerbank';
-  $username = 'root';
-  $password = '';
-  $port = 3306;
+    // Conexión a la base de datos
+    $host = 'localhost';
+    $dbname = 'ilerbank';
+    $username = 'root';
+    $password = '';
+    $port = 3306;
 
+    $conn = new mysqli($host, $username, $password, $dbname, $port);
 
-  $conn = new mysqli($host, $username, $password, $dbname, $port);
+    if ($conn->connect_error) {
+        die("Error de conexión: " . $conn->connect_error);
+    }
 
+    // Escapar las entradas del formulario para evitar inyecciones SQL
+    $dni = $_POST['dni'];
+    $nombre = $_POST['nombre_usuario'];
+    $apellido = $_POST['apellido'];
+    $email = $_POST['email'];
+    $fecha_nacimiento = $_POST['fecha_nacimiento'];
+    $direccion = $_POST['direccion'];
+    $codigo_postal = $_POST['codigo_postal'];
+    $ciudad = $_POST['ciudad'];
+    $provincia = $_POST['provincia'];
+    $contrasena = $_POST['contrasena']; // No se utiliza hash aquí
 
-  if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
-  }
+    // Obtener la información de la foto
+    $foto_perfil = $_FILES['foto_perfil']['name'];
+    $foto_temporal = $_FILES['foto_perfil']['tmp_name'];
 
+    // Ruta donde se guardan las fotos (carpeta img dentro del proyecto)
+    $ruta_foto = 'img/' . $foto_perfil;
 
-  // Escapar las entradas del formulario para evitar inyecciones SQL
-  $dni = $_POST['dni'];
-  $nombre = $_POST['nombre_usuario'];
-  $apellido = $_POST['apellido'];
-  $email = $_POST['email'];
-  $fecha_nacimiento = $_POST['fecha_nacimiento'];
-  $direccion = $_POST['direccion'];
-  $codigo_postal = $_POST['codigo_postal'];
-  $ciudad = $_POST['ciudad'];
-  $provincia = $_POST['provincia'];
-  $contrasena = $_POST['contrasena']; // No se utiliza hash aquí
+    // Mover la foto a la ubicación deseada
+    move_uploaded_file($foto_temporal, $ruta_foto);
 
+    // Consulta preparada para insertar el nuevo usuario con la foto
+    $insertQuery = "INSERT INTO usuarios (dni, nombre_usuario, apellido, email, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, contrasena, foto_perfil)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-  // Consulta preparada para insertar el nuevo usuario
-  $insertQuery = "INSERT INTO usuarios (dni, nombre_usuario, apellido, email, fecha_nacimiento, direccion, codigo_postal, ciudad, provincia, contrasena)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-
-  $stmt = $conn->prepare($insertQuery);
-
-
-  // Verifica si la preparación de la consulta fue exitosa
-  if ($stmt) {
-    // Enlazar parámetros
-    $stmt->bind_param('ssssssssss', $dni, $nombre, $apellido, $email, $fecha_nacimiento, $direccion, $codigo_postal, $ciudad, $provincia, $contrasena);
-
+    // Preparar la consulta
+    $stmt = $conn->prepare($insertQuery);
+    $stmt->bind_param('sssssssssss', $dni, $nombre, $apellido, $email, $fecha_nacimiento, $direccion, $codigo_postal, $ciudad, $provincia, $contrasena, $ruta_foto);
 
     // Ejecutar la consulta
     if ($stmt->execute()) {
-      // Registro exitoso, redirigir a la página de inicio de sesión
-      header('Location: login.php');
-      exit();
+        // Registro exitoso, redirigir a la página de inicio de sesión
+        header('Location: login.php');
+        exit();
     } else {
-      // Error al registrar
-      $error_message = "Error al registrar. Por favor, inténtelo de nuevo.";
+        // Error al registrar
+        $error_message = "Error al registrar. Por favor, inténtelo de nuevo.";
     }
-
 
     // Cierra la declaración preparada
     $stmt->close();
-  } else {
-    // Error en la preparación de la consulta
-    $error_message = "Error al preparar la consulta. Por favor, inténtelo de nuevo.";
-  }
-
-
-  $conn->close();
+    
+    // Cierra la conexión
+    $conn->close();
 }
 ?>
+
+<!-- Resto del código HTML ... -->
+
 <!doctype html>
 <html lang="en">
 
@@ -174,6 +172,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="password" class="form-control" id="contrasena" name="contrasena" required>
           </div>
 
+          <div class="mb-3">
+    <label for="foto_perfil" class="form-label">Foto de perfil:</label>
+    <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" accept="image/*">
+</div>
 
           <input type="submit" class="btn btn-primary" value="Registrar">
           <p>¿Ya tienes una cuenta? <a href="login.php">Iniciar sesión</a></p>
