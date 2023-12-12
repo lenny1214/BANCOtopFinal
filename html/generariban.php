@@ -87,7 +87,6 @@ if ($resultEmail->num_rows > 0) {
 
 <body>
     <header>
-    <header>
        <!-- Navbar -->
        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">

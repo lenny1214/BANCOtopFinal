@@ -9,12 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
     exit();
 }
 
-// Verifica si el usuario no ha iniciado sesión
-if (!isset($_SESSION['nombre_usuario'])) {
-    header('Location: login.php');
-    exit();
-}
-
 // Conexión a la base de datos
 $conn = new mysqli('localhost', 'root', '', 'ilerbank');
 
@@ -24,48 +18,36 @@ if ($conn->connect_error) {
 
 // Obtener información del usuario
 $username = $_SESSION['nombre_usuario'];
-$query = "SELECT foto_perfil FROM usuarios WHERE nombre_usuario = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param('s', $username);
-$stmt->execute();
-$stmt->bind_result($foto_perfil);
-$stmt->fetch();
-$stmt->close();
 
 // Obtener saldo del usuario
 $saldoQuery = "SELECT SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE -monto END) AS saldo 
                FROM movimientos WHERE nombre_usuario = ?";
-$stmtSaldo = $conn->prepare($saldoQuery);
-$stmtSaldo->bind_param('s', $username);
-$stmtSaldo->execute();
-$stmtSaldo->bind_result($saldo);
-$stmtSaldo->fetch();
-$stmtSaldo->close();
+$stmt = $conn->prepare($saldoQuery);
+$stmt->bind_param('s', $username);
+$stmt->execute();
+$stmt->bind_result($saldo);
+$stmt->fetch();
+$stmt->close();
 
 // Obtener últimos 10 movimientos del usuario
 $movimientosQuery = "SELECT * FROM movimientos WHERE nombre_usuario = ? ORDER BY fecha_movimiento DESC LIMIT 10";
-$stmtMovimientos = $conn->prepare($movimientosQuery);
-$stmtMovimientos->bind_param('s', $username);
-$stmtMovimientos->execute();
-$movimientosResult = $stmtMovimientos->get_result();
+$stmt = $conn->prepare($movimientosQuery);
+$stmt->bind_param('s', $username);
+$stmt->execute();
+$movimientosResult = $stmt->get_result();
+$stmt->close();
 
-// Obtener detalles del préstamo
-$prestamoQuery = "SELECT * FROM prestamos WHERE nombre_usuario = ? ORDER BY fecha_solicitud DESC LIMIT 1";
-$stmtPrestamo = $conn->prepare($prestamoQuery);
-$stmtPrestamo->bind_param('s', $username);
-$stmtPrestamo->execute();
-$prestamoResult = $stmtPrestamo->get_result();
+// Obtener historial de préstamos del usuario
+$prestamosQuery = "SELECT * FROM prestamos WHERE nombre_usuario = ?";
+$stmt = $conn->prepare($prestamosQuery);
+$stmt->bind_param('s', $username);
+$stmt->execute();
+$prestamosResult = $stmt->get_result();
+$stmt->close();
 
-// Cerrar las declaraciones preparadas
-$stmtMovimientos->close();
-$stmtPrestamo->close();
-
-// Cerrar conexión (después de haber terminado de trabajar con todas las consultas)
+// Cerrar conexión
 $conn->close();
 ?>
-<!-- Resto de tu código -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,34 +110,27 @@ $conn->close();
         <p>Saldo: <?php echo $saldo; ?></p>
 
         <h2>Últimos 10 Movimientos</h2>
-        <?php
-        while ($movimiento = $movimientosResult->fetch_assoc()) {
-            $signo = ($movimiento['tipo_movimiento'] == 'ingreso') ? '+' : '-';
-            echo "<li>{$movimiento['tipo_movimiento']} {$signo} {$movimiento['monto']} - {$movimiento['fecha_movimiento']}</li>";
-        }
-        ?>
-<h2>Datos del Préstamo</h2>
-         <?php
-       $prestamoQuery = "SELECT * FROM prestamos WHERE nombre_usuario = ? ORDER BY fecha_solicitud DESC LIMIT 1";
-       $stmtPrestamo = $conn->prepare($prestamoQuery);
-       $stmtPrestamo->bind_param('s', $username);
-       $stmtPrestamo->execute();
-       $prestamoResult = $stmtPrestamo->get_result();
-       $stmtPrestamo->close();
-       
-       if ($prestamo = $prestamoResult->fetch_assoc()) {
-           echo "<p>Cantidad: {$prestamo['cantidad']}</p>";
-           echo "<p>Concepto: {$prestamo['concepto']}</p>";
-           echo "<p>Amortización en meses: {$prestamo['amortizacion_meses']}</p>";
-           echo "<p>Cuota Mensual: {$prestamo['cuota_mensual']}</p>";
-           echo "<p>Fecha de Solicitud: {$prestamo['fecha_solicitud']}</p>";
-       } else {
-           echo "<p>No hay préstamos solicitados.</p>";
-       }
-       
-        ?>
+<?php
+while ($movimiento = $movimientosResult->fetch_assoc()) {
+    $signo = ($movimiento['tipo_movimiento'] == 'ingreso') ? '+' : '-';
+    $monto = isset($movimiento['monto']) ? $movimiento['monto'] : 0;
+    echo "<li>{$movimiento['tipo_movimiento']} {$signo} {$monto} - {$movimiento['fecha_movimiento']}</li>";
+}
+?>
 
-        <!-- Fin de la sección de detalles del préstamo -->
+<h2>Historial de Préstamos</h2>
+<?php
+if ($prestamosResult->num_rows > 0) {
+    while ($prestamo = $prestamosResult->fetch_assoc()) {
+        $cantidadPrestamo = isset($prestamo['cantidad']) ? $prestamo['cantidad'] : 0;
+        echo "<li>Prestamo: {$cantidadPrestamo} - {$prestamo['fecha_prestamo']} - Estado: {$prestamo['estado_aprobacion']}</li>";
+    }
+} else {
+    echo "<p>No has solicitado ningún préstamo.</p>";
+}
+?>
+
+
         <!-- Mostrar la foto de perfil -->
         <img src="<?php echo $foto_perfil; ?>" alt="Foto de perfil">
     </div>

@@ -1,11 +1,14 @@
 <?php
 session_start();
 
-// Verifica si el usuario no ha iniciado sesión
-if (!isset($_SESSION['nombre_usuario'])) {
+// Verifica si se ha enviado el formulario de cerrar sesión
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
+    // Cierra la sesión
+    session_destroy();
     header('Location: login.php');
     exit();
 }
+
 
 // Conexión a la base de datos
 $conn = new mysqli('localhost', 'root', '', 'ilerbank');
@@ -14,83 +17,53 @@ if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
-
-// Obtener saldo del usuario
-$saldoQuery = "SELECT SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE -monto END) AS saldo 
-               FROM movimientos WHERE nombre_usuario = ?";
-$stmtSaldo = $conn->prepare($saldoQuery);
-$stmtSaldo->bind_param('s', $username);
-$stmtSaldo->execute();
-$stmtSaldo->bind_result($saldo);
-$stmtSaldo->fetch();
-$stmtSaldo->close();
-
-// Verificar si el saldo es mayor que 1000 para permitir solicitar el préstamo
-if ($saldo >= 1000) {
-    // Si el saldo es suficiente, redirige a prestamo.php
-    header('Location: versaldo.php');
-    exit();
-}
-
-
-
-// Verifica si se ha enviado el formulario
+// Verifica si se ha enviado el formulario de solicitud de préstamo
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar_prestamo'])) {
-  $cantidad = $_POST['cantidad'];
-  $concepto = $_POST['concepto'];
-  $amortizacion_meses = $_POST['amortizacion_meses'];
+    $username = $_SESSION['nombre_usuario'];
+    $cantidad = $_POST['cantidad'];
+    $concepto = $_POST['concepto'];
+    $amortizacion = $_POST['amortizacion'];
+    $interes = 0.12; // 0.12 = 12%
 
-  // Asegúrate de que los campos no estén vacíos
-  if (empty($cantidad) || empty($concepto) || empty($amortizacion_meses)) {
-      $error_message = "Todos los campos son obligatorios.";
-  } else {
-      // Calcular interés del 0.7%
-      $interes = 0.007; // 0.7%
+    // Obtener saldo del usuario
+    $saldoQuery = "SELECT saldo FROM usuarios WHERE nombre_usuario = ?";
+    $stmt = $conn->prepare($saldoQuery);
+    $stmt->bind_param('s', $username);
+    $stmt->execute();
+    $stmt->bind_result($saldo);
+    $stmt->fetch();
+    $stmt->close();
 
-      // Calcular la cuota mensual del préstamo
-      $cuota_mensual = ($cantidad * $interes) / (1 - pow(1 + $interes, -$amortizacion_meses));
+    // Verificar si el saldo es suficiente
+    $saldo_suficiente = $saldo >= 1000;
 
-      // Insertar préstamo en la tabla prestamos
-      $id_administrador = 1;  // ID del administrador (puedes cambiarlo según tu lógica)
-      $estado_aprobacion = 'Pendiente'; // El préstamo se establece como pendiente de aprobación
+    if ($saldo_suficiente) {
+        // Calcula la cuota de amortización
+        $cuota_amortizacion = ($cantidad * $interes) / (1 - pow(1 + $interes, -$amortizacion));
 
-      $insertPrestamoQuery = "INSERT INTO prestamos (id_administrador, nombre_usuario, cantidad, concepto, amortizacion_meses, cuota_mensual, estado_aprobacion) VALUES (?, ?, ?, ?, ?, ?, ?)";
-      $stmt = $conn->prepare($insertPrestamoQuery);
-      $stmt->bind_param('isissds', $id_administrador, $username, $cantidad, $concepto, $amortizacion_meses, $cuota_mensual, $estado_aprobacion);
-      $stmt->execute();
-      $stmt->close();
+        // Inserta el préstamo en la base de datos
+        $insertPrestamoQuery = "INSERT INTO prestamos (nombre_usuario, cantidad, concepto, amortizacion, cuota_amortizacion, fecha_prestamo) VALUES (?, ?, ?, ?, ?, NOW())";
+        $stmt = $conn->prepare($insertPrestamoQuery);
+        $stmt->bind_param('sdsds', $username, $cantidad, $concepto, $amortizacion, $cuota_amortizacion);
+        $stmt->execute();
+        $stmt->close();
 
-      // Actualizar saldo del usuario en la tabla usuarios
-      $updateSaldoQuery = "UPDATE usuarios SET saldo = saldo + $cantidad WHERE nombre_usuario = ?";
-      $stmt = $conn->prepare($updateSaldoQuery);
-      $stmt->bind_param('s', $username);
-      $stmt->execute();
-      $stmt->close();
+        // Cierra la conexión
+        $conn->close();
 
-      // Redirigir o mostrar mensaje de éxito, según tus necesidades
-      header('Location: versaldo.php');
-      exit();
-  }
+        // Redirige a versaldo.php después de la solicitud de préstamo
+        header('Location: versaldo.php');
+        exit();
+    } else {
+        $mensaje_error = "No tienes el saldo necesario para solicitar un préstamo.";
+    }
 }
-
-// Obtener detalles de todos los préstamos del usuario
-$prestamosQuery = "SELECT * FROM prestamos WHERE nombre_usuario = ? ORDER BY fecha_solicitud DESC";
-$stmtPrestamos = $conn->prepare($prestamosQuery);
-$stmtPrestamos->bind_param('s', $username);
-$stmtPrestamos->execute();
-$prestamosResult = $stmtPrestamos->get_result();
-$stmtPrestamos->close();
-
-
-// Cerrar conexión
-$conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <title>Solicitud prestamos</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -106,31 +79,62 @@ $conn->close();
 </head>
 
 <body>
-<header>
-    <!-- Navbar -->
-    <!-- ... Tu código navbar ... -->
-</header>
-<div class="container">
-    <?php if (isset($error_message)): ?>
-        <div class="alert alert-danger" role="alert">
-            <?php echo $error_message; ?>
-        </div>
-    <?php endif; ?>
+    <header>
+       <!-- Navbar -->
+       <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="versaldo.php">IlerBank</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="anadiringa.php">Añadir Ingreso/Gasto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="generariban.php">Generar IBAN</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="prestamo.php">Pedir Préstamo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="chat.php">Chat</a>
+                        </li>
+                    </ul>
+                </div>
+                <form class="d-flex" method="post" action="">
+                    <input class="btn btn-outline-danger" type="submit" name="cerrar_sesion" value="Cerrar Sesión">
+                </form>
+            </div>
+        </nav>
+    </header>
 
-    <form method="post" action="versaldo.php"> <!-- Aquí está el cambio -->
-        <label for="cantidad">Cantidad:</label>
-        <input type="number" name="cantidad" id="cantidad" step="0.01" required>
-        <br>
-        <label for="concepto">Concepto:</label>
-        <input type="text" name="concepto" id="concepto" required>
-        <br>
-        <label for="amortizacion_meses">Amortización en Meses:</label>
-        <input type="number" name="amortizacion_meses" id="amortizacion_meses" required>
-        <br>
-        <input type="submit" name="solicitar_prestamo" value="Solicitar Préstamo">
-    </form>
-</div>
+    <main>
+        <h2>Solicitud de Préstamo</h2>
+        <?php
+        if (isset($mensaje_error)) {
+            echo "<p style='color: red;'>$mensaje_error</p>";
+        }
+        ?>
+        <form method="post" action="">
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" name="cantidad" required>
+            
+            <label for="concepto">Concepto:</label>
+            <input type="text" name="concepto" required>
+            
+            <label for="amortizacion">Amortización (meses):</label>
+            <input type="number" name="amortizacion" required>
 
+            <input type="submit" name="solicitar_prestamo" value="Solicitar Préstamo">
+        </form>
+    </main>
+
+    <footer>
+        <!-- Pie de página -->
+    </footer>
 </body>
-
 </html>

@@ -34,21 +34,19 @@ CREATE TABLE movimientos (
     FOREIGN KEY (nombre_usuario) REFERENCES usuarios(nombre_usuario)
 );
 
--- ... (otras tablas)
-
+-- Crear la tabla de préstamos
 CREATE TABLE prestamos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_usuario VARCHAR(255) NOT NULL,
     cantidad DECIMAL(10, 2) NOT NULL,
     concepto VARCHAR(255) NOT NULL,
-    amortizacion_meses INT NOT NULL,
-    cuota_mensual DECIMAL(10, 2) NOT NULL,
-    fecha_solicitud TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    estado ENUM('Pendiente', 'Aceptado', 'Denegado') NOT NULL DEFAULT 'Pendiente',
+    amortizacion INT NOT NULL,
+    cuota_amortizacion DECIMAL(10, 2) NOT NULL,
+    fecha_prestamo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado_aprobacion VARCHAR(20) NOT NULL DEFAULT 'Pendiente', -- Nueva columna
     FOREIGN KEY (nombre_usuario) REFERENCES usuarios(nombre_usuario)
 );
 
--- ... (otros comandos)
 
 
 ALTER TABLE usuarios
@@ -69,10 +67,6 @@ ADD COLUMN saldo DECIMAL(10, 2) NOT NULL DEFAULT 0;
 ALTER TABLE usuarios
 ADD COLUMN foto_perfil VARCHAR(255) DEFAULT 'img/user.jpg';
 
-ALTER TABLE prestamos
-ADD COLUMN id_administrador VARCHAR(255),
-ADD COLUMN estado_aprobacion ENUM('Pendiente', 'Aceptado', 'Denegado') NOT NULL DEFAULT 'Pendiente',
-ADD FOREIGN KEY (id_administrador) REFERENCES usuarios(nombre_usuario);
 
 
 
