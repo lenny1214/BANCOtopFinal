@@ -27,7 +27,6 @@ if ($conn->connect_error) {
 // Obtener préstamos pendientes
 $queryPrestamos = "SELECT id, nombre_usuario, cantidad, concepto, amortizacion, cuota_amortizacion FROM prestamos WHERE estado_aprobacion = 'Pendiente'";
 $resultPrestamos = $conn->query($queryPrestamos); // Añadir el punto y coma aquí
-// Después de $queryPrestamos
 
 // Agrega esto para verificar si hay resultados en la consulta
 
@@ -79,9 +78,7 @@ $resultPrestamos = $conn->query($queryPrestamos); // Añadir el punto y coma aqu
   </header>
     <?php
 
-// Agrega esto para verificar si hay resultados en la consulta
 if ($resultPrestamos->num_rows > 0) {
-    // Resto del código
 } else {
     echo "No hay préstamos pendientes.";
 }
@@ -89,7 +86,6 @@ if ($resultPrestamos->num_rows > 0) {
 while ($prestamo = $resultPrestamos->fetch_assoc()) {
     echo "Nombre de usuario: " . $prestamo['nombre_usuario'] . "<br>";
     echo "Cantidad: " . $prestamo['cantidad'] . "<br>";
-    // ... (mostrar otros detalles del préstamo)
 
     // Formulario para aprobar o denegar el préstamo
     echo "<form method='post' action='procesar_aprobacion.php'>";
