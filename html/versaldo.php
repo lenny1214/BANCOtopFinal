@@ -64,11 +64,19 @@ $conn->close();
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../css/style.css">
-
+    <style>
+        /* Estilo para el fondo de color crema */
+        body.bg-crema {
+            background-color: #f5f5dc; /* Código de color crema */
+            background-image: url('../img/fondo.png');
+            background-size: cover; /* Para asegurar que la imagen cubra todo el fondo */
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Fija la imagen para que no se desplace con el contenido */
+        }
+    </style>
 </head>
 
-<body class="d-flex flex-column h-100 bg-light">
+<body class="d-flex flex-column h-100 bg-crema">
     <header>
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -103,10 +111,10 @@ $conn->close();
     </header>
 
     <main class="container flex-grow-1 mt-4">
-        <h2 class="text-center mb-4">Bienvenido,
-            <?php echo $_SESSION['nombre_usuario'] . ". Hoy es: " . date('d \d\e F \d\e Y'); ?>!
-        </h2>
-
+    <div class="card p-4">
+        <div class="bg-crema text-center p-3 mb-4 rounded">
+            <h2 class="text-dark">Bienvenido, <?php echo $_SESSION['nombre_usuario'] . ". Hoy es: " . date('d \d\e F \d\e Y'); ?>!</h2>
+        </div>
         <div class="card p-4">
             <h2>Saldo Actual</h2>
             <p class="lead">Saldo: <?php echo $saldo; ?></p>
