@@ -48,6 +48,30 @@ CREATE TABLE prestamos (
 );
 
 
+-- Crear la tabla de mensajes
+CREATE TABLE mensajes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    remitente VARCHAR(255) NOT NULL,
+    destinatario VARCHAR(255) NOT NULL,
+    mensaje TEXT NOT NULL,
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (remitente) REFERENCES usuarios(nombre_usuario),
+    FOREIGN KEY (destinatario) REFERENCES usuarios(nombre_usuario)
+);
+
+
+CREATE TABLE mensajes_recibidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    destinatario VARCHAR(255) NOT NULL,
+    remitente VARCHAR(255) NOT NULL,
+    mensaje_id INT NOT NULL,
+    leido BOOLEAN NOT NULL DEFAULT 0,
+    FOREIGN KEY (destinatario) REFERENCES usuarios(nombre_usuario),
+    FOREIGN KEY (remitente) REFERENCES usuarios(nombre_usuario),
+    FOREIGN KEY (mensaje_id) REFERENCES mensajes(id)
+);
+
+
 
 ALTER TABLE usuarios
 ADD COLUMN es_administrador BOOLEAN NOT NULL DEFAULT 0;

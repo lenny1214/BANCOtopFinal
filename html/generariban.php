@@ -87,17 +87,19 @@ if ($resultEmail->num_rows > 0) {
 
 <body>
     <header>
-       <!-- Navbar -->
-       <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="versaldo.php">IlerBank</a>
+                <a class="navbar-brand" href="versaldo.php">
+                    <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top">
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="anadiringa.php">Añadir Ingreso/Gasto</a>
                         </li>
@@ -117,12 +119,11 @@ if ($resultEmail->num_rows > 0) {
                 </form>
             </div>
         </nav>
-   
     </header>
-    <main>
-        <div class="container mt-3">
-            <h2>Generar IBAN</h2>
-            <p>IBAN generado: <?php echo $ibanUsuario; ?></p>
+    <main class="container mt-3">
+        <h2 class="mb-4">Generar IBAN</h2>
+        <div class="card p-4">
+            <p class="lead">IBAN generado: <?php echo $ibanUsuario; ?></p>
         </div>
     </main>
 

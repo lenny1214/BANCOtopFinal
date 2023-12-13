@@ -51,42 +51,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_movimiento'
 // Cerrar conexión
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
- <!-- Required meta tags -->
- <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-
-  <!-- Bootstrap CSS v5.2.1 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-  <!-- Bootstrap JavaScript Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
-    </script>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
-    </script>
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+            integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+            integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
+</head>
 
 <body>
-<header>
-
-       <!-- Navbar -->
-       <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <header>
+         <!-- Navbar -->
+         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="versaldo.php">IlerBank</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                <a class="navbar-brand" href="versaldo.php">
+                    <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top">
+                </a>               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="anadiringa.php">Añadir Ingreso/Gasto</a>
                         </li>
@@ -107,26 +103,30 @@ $conn->close();
             </div>
         </nav>
     </header>
+    
     <!-- Contenido del cuerpo de la página -->
-    <div class="container">
-    <?php if (!empty($mensaje_exito)): ?>
-        <div class="alert alert-success" role="alert">
-            <?php echo $mensaje_exito; ?>
-        </div>
-    <?php endif; ?>
+    <div class="container mt-4">
+        <?php if (!empty($mensaje_exito)): ?>
+            <div class="alert alert-success" role="alert">
+                <?php echo $mensaje_exito; ?>
+            </div>
+        <?php endif; ?>
 
-    <form method="post" action="">
-        <label for="tipo_movimiento">Tipo de Movimiento:</label>
-        <select name="tipo_movimiento" id="tipo_movimiento" required>
-            <option value="ingreso">Ingreso</option>
-            <option value="gasto">Gasto</option>
-        </select>
-        <br>
-        <label for="monto">Monto:</label>
-        <input type="number" name="monto" id="monto" step="0.01" required>
-        <br>
-        <input type="submit" name="registrar_movimiento" value="Registrar Movimiento">
-    </form>
+        <form method="post" action="">
+            <div class="mb-3">
+                <label for="tipo_movimiento" class="form-label">Tipo de Movimiento:</label>
+                <select name="tipo_movimiento" id="tipo_movimiento" class="form-select" required>
+                    <option value="ingreso">Ingreso</option>
+                    <option value="gasto">Gasto</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="monto" class="form-label">Monto:</label>
+                <input type="number" name="monto" id="monto" step="0.01" class="form-control" required>
+            </div>
+            <button type="submit" name="registrar_movimiento" class="btn btn-primary">Registrar Movimiento</button>
+        </form>
+    </div>
 </body>
 
 </html>

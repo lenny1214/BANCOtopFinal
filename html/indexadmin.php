@@ -54,22 +54,20 @@ $conn->close();
        <!-- Navbar -->
        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="indexadmin.php">IlerBank</a>
+                <a class="navbar-brand" href="indexadmin.php">
+                    <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top">
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="aprobar_prestamo.php">Ver Solicitudes de Préstamo</a>
+                            <a class="nav-link" href="aprobar_prestamo.php">Ver Solicitudes de Préstamos</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="chatadmin.php">Chat</a>
-                        </li>
-                    </ul>
-                </div>
+                        
                 <form class="d-flex" method="post" action="">
                     <input class="btn btn-outline-danger" type="submit" name="cerrar_sesion" value="Cerrar Sesión">
                 </form>

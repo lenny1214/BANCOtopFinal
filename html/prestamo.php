@@ -58,39 +58,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar_prestamo'])
         $mensaje_error = "No tienes el saldo necesario para solicitar un préstamo.";
     }
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>Solicitud prestamos</title>
+    <title>Solicitud de Préstamo - IlerBank</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-            integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-            integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
     <header>
-       <!-- Navbar -->
-       <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="versaldo.php">IlerBank</a>
+                <a class="navbar-brand" href="versaldo.php">
+                    <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top">
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="anadiringa.php">Añadir Ingreso/Gasto</a>
                         </li>
@@ -112,24 +117,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar_prestamo'])
         </nav>
     </header>
 
-    <main>
-        <h2>Solicitud de Préstamo</h2>
+    <main class="container mt-3">
+        <h2 class="mb-4">Solicitud de Préstamo</h2>
         <?php
         if (isset($mensaje_error)) {
-            echo "<p style='color: red;'>$mensaje_error</p>";
+            echo "<p class='text-danger'>$mensaje_error</p>";
         }
         ?>
-        <form method="post" action="">
-            <label for="cantidad">Cantidad:</label>
-            <input type="number" name="cantidad" required>
-            
-            <label for="concepto">Concepto:</label>
-            <input type="text" name="concepto" required>
-            
-            <label for="amortizacion">Amortización (meses):</label>
-            <input type="number" name="amortizacion" required>
-
-            <input type="submit" name="solicitar_prestamo" value="Solicitar Préstamo">
+        <form method="post" action="" class="row g-3">
+            <div class="col-md-6">
+                <label for="cantidad" class="form-label">Cantidad:</label>
+                <input type="number" name="cantidad" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label for="concepto" class="form-label">Concepto:</label>
+                <input type="text" name="concepto" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+                <label for="amortizacion" class="form-label">Amortización (meses):</label>
+                <input type="number" name="amortizacion" class="form-control" required>
+            </div>
+            <div class="col-12">
+                <button type="submit" name="solicitar_prestamo" class="btn btn-primary">Solicitar Préstamo</button>
+            </div>
         </form>
     </main>
 
@@ -137,4 +147,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['solicitar_prestamo'])
         <!-- Pie de página -->
     </footer>
 </body>
+
 </html>

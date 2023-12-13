@@ -18,6 +18,8 @@ if ($conn->connect_error) {
 
 // Obtener información del usuario
 $username = $_SESSION['nombre_usuario'];
+// Obtener foto de perfil del usuario
+$foto_perfil = isset($_SESSION['foto_perfil']) ? $_SESSION['foto_perfil'] : '../img/user.jpg';
 
 // Obtener saldo del usuario
 $saldoQuery = "SELECT SUM(CASE WHEN tipo_movimiento = 'ingreso' THEN monto ELSE -monto END) AS saldo 
@@ -50,6 +52,7 @@ $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Movimientos</title>
     <!-- Required meta tags -->
@@ -66,19 +69,20 @@ $conn->close();
             integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
 </head>
 
-<body>
-<header>
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<body class="d-flex flex-column h-100">
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="versaldo.php.php">IlerBank</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                <a class="navbar-brand" href="versaldo.php">
+                    <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top">
+                </a>               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="anadiringa.php">Añadir Ingreso/Gasto</a>
                         </li>
@@ -98,46 +102,49 @@ $conn->close();
                 </form>
             </div>
         </nav>
-  </header>
+    </header>
 
-<main>
-    <h2>Bienvenido,
-        <?php echo $_SESSION['nombre_usuario']. ". Hoy es: " . date ('d \d\e F \d\e Y'); ?>!
-    </h2>
+    <main class="container flex-grow-1 mt-4">
+        <h2 class="text-center mb-4">Bienvenido,
+            <?php echo $_SESSION['nombre_usuario']. ". Hoy es: " . date ('d \d\e F \d\e Y'); ?>!
+        </h2>
 
-    <div style="padding: 16px;">
-        <h2>Saldo Actual</h2>
-        <p>Saldo: <?php echo $saldo; ?></p>
+        <div class="card p-4">
+            <h2>Saldo Actual</h2>
+            <p class="lead">Saldo: <?php echo $saldo; ?></p>
 
-        <h2>Últimos 10 Movimientos</h2>
-<?php
-while ($movimiento = $movimientosResult->fetch_assoc()) {
-    $signo = ($movimiento['tipo_movimiento'] == 'ingreso') ? '+' : '-';
-    $monto = isset($movimiento['monto']) ? $movimiento['monto'] : 0;
-    echo "<li>{$movimiento['tipo_movimiento']} {$signo} {$monto} - {$movimiento['fecha_movimiento']}</li>";
-}
-?>
+            <h2>Últimos 10 Movimientos</h2>
+            <ul class="list-group">
+                <?php
+                while ($movimiento = $movimientosResult->fetch_assoc()) {
+                    $signo = ($movimiento['tipo_movimiento'] == 'ingreso') ? '+' : '-';
+                    $monto = isset($movimiento['monto']) ? $movimiento['monto'] : 0;
+                    echo "<li class='list-group-item'>{$movimiento['tipo_movimiento']} {$signo} {$monto} - {$movimiento['fecha_movimiento']}</li>";
+                }
+                ?>
+            </ul>
 
-<h2>Historial de Préstamos</h2>
-<?php
-if ($prestamosResult->num_rows > 0) {
-    while ($prestamo = $prestamosResult->fetch_assoc()) {
-        $cantidadPrestamo = isset($prestamo['cantidad']) ? $prestamo['cantidad'] : 0;
-        echo "<li>Prestamo: {$cantidadPrestamo} - {$prestamo['fecha_prestamo']} - Estado: {$prestamo['estado_aprobacion']}</li>";
-    }
-} else {
-    echo "<p>No has solicitado ningún préstamo.</p>";
-}
-?>
+            <h2>Historial de Préstamos</h2>
+            <ul class="list-group">
+                <?php
+                if ($prestamosResult->num_rows > 0) {
+                    while ($prestamo = $prestamosResult->fetch_assoc()) {
+                        $cantidadPrestamo = isset($prestamo['cantidad']) ? $prestamo['cantidad'] : 0;
+                        echo "<li class='list-group-item'>Prestamo: {$cantidadPrestamo} - {$prestamo['fecha_prestamo']} - Estado: {$prestamo['estado_aprobacion']}</li>";
+                    }
+                } else {
+                    echo "<li class='list-group-item'>No has solicitado ningún préstamo.</li>";
+                }
+                ?>
+            </ul>
 
+            <!-- Mostrar la foto de perfil -->
+            <img src="<?php echo $foto_perfil; ?>" alt="Foto de perfil" class="img-fluid img-thumbnail mt-4" style="max-width: 100px;">
+        </div>
+    </main>
 
-        <!-- Mostrar la foto de perfil -->
-        <img src="<?php echo $foto_perfil; ?>" alt="Foto de perfil">
-    </div>
-</main>
-
-<footer>
-    <!-- place footer here -->
-</footer>
+    <footer class="mt-4">
+        <!-- place footer here -->
+    </footer>
 </body>
 </html>
