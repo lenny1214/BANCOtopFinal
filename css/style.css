@@ -66,6 +66,10 @@ body {
 
 
 
+body {
+    background-color: #F5F5DC; /* Este es un color crema clarito */
+ }
+
 
 body {
     height: 100vh;
@@ -76,7 +80,16 @@ body {
     background-color:   #FCD0B4; /* Color de fondo gris claro */
   }
 
+body {
+   background-image: url('../img/fondo.png');
+   background-size: cover;
+}
 
+body {
+    background-color: rgba(245, 245, 219, 0.5); /* Este es un color crema clarito con una transparencia del 50% */
+ }
+
+ 
   .login-container {
     background-color: rgb(29, 77, 34);
     padding: 20px;
