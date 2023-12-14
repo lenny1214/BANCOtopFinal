@@ -151,9 +151,16 @@ if (!empty($destinatario_seleccionado)) {
             </div>
         </div>
     </main>
-    <footer>
-        <!-- Pie de página -->
-    </footer>
+    <footer class="mt-4 bg-light text-center p-3">
+    <div class="container">
+        <p class="mb-0">
+            &copy; <?php echo date('Y'); ?> Banco Ilerbank. Todos los derechos reservados.
+        </p>
+        <p class="mb-0">
+            <a href="terminos_y_condiciones.php" class="text-decoration-none">Términos y Condiciones</a>
+        </p>
+    </div>
+</footer>
 </body>
 
 </html>

@@ -64,6 +64,9 @@ $conn->close();
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="../sass/css/headder.css">
+
+    
     <style>
         /* Estilo para el fondo de color crema */
         body.bg-crema {
@@ -82,7 +85,7 @@ $conn->close();
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="versaldo.php">
-                    <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top">
+                    <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top"> 
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -147,11 +150,19 @@ $conn->close();
             <!-- Mostrar la foto de perfil -->
             <img src="<?php echo $foto_perfil; ?>" alt="Foto de perfil" class="img-fluid img-thumbnail mt-4" style="max-width: 100px;">
         </div>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/FoOkSaZErAc?si=_4zp1p-mC8Oa6VsL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </main>
 
-    <footer class="mt-4">
-        <!-- place footer here -->
-    </footer>
+    <footer class="mt-4 bg-light text-center p-3">
+    <div class="container">
+        <p class="mb-0">
+            &copy; <?php echo date('Y'); ?> Banco Ilerbank. Todos los derechos reservados.
+        </p>
+        <p class="mb-0">
+            <a href="terminos_y_condiciones.php" class="text-decoration-none">Términos y Condiciones</a>
+        </p>
+    </div>
+</footer>
 
 </body>
 

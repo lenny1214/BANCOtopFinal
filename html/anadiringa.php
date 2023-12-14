@@ -105,7 +105,7 @@ $conn->close();
          <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="versaldo.php">
-                    <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top">
+                    <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top">Inicio
                 </a>
                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
@@ -159,6 +159,16 @@ $conn->close();
             <button type="submit" name="registrar_movimiento" class="btn btn-primary">Registrar Movimiento</button>
         </form>
     </div>
+    <footer class="mt-4 bg-light text-center p-3">
+    <div class="container">
+        <p class="mb-0">
+            &copy; <?php echo date('Y'); ?> Banco Ilerbank. Todos los derechos reservados.
+        </p>
+        <p class="mb-0">
+            <a href="terminos_y_condiciones.php" class="text-decoration-none">Términos y Condiciones</a>
+        </p>
+    </div>
+</footer>
 </body>
 
 </html>
