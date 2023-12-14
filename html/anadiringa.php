@@ -19,7 +19,7 @@ if (!isset($_SESSION['nombre_usuario'])) {
 $mensaje_exito = '';
 
 // Conexión a la base de datos
-$conn = new mysqli('localhost', 'root', '', 'ilerbank');
+$conn = new mysqli('localhost', 'root', 'Ign@fervig12', 'ilerbank');
 
 if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
@@ -36,16 +36,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar_movimiento'
         exit();
     }
 
-    // Insertar movimiento en la tabla movimientos
-    $insertMovimientoQuery = "INSERT INTO movimientos (nombre_usuario, tipo_movimiento, monto) VALUES ('{$_SESSION['nombre_usuario']}', '$tipo_movimiento', $monto)";
-    $conn->query($insertMovimientoQuery);
+    // Verifica si el usuario existe en la tabla de usuarios
+    $checkUsuarioQuery = "SELECT nombre_usuario FROM usuarios WHERE nombre_usuario = '{$_SESSION['nombre_usuario']}'";
+    $result = $conn->query($checkUsuarioQuery);
 
-    // Actualizar saldo del usuario en la tabla usuarios
-    $updateSaldoQuery = "UPDATE usuarios SET saldo = saldo + CASE WHEN '$tipo_movimiento' = 'ingreso' THEN $monto ELSE -$monto END WHERE nombre_usuario = '{$_SESSION['nombre_usuario']}'";
-    $conn->query($updateSaldoQuery);
+    if ($result->num_rows > 0) {
+        // El usuario existe, procede con la inserción del movimiento
+        $insertMovimientoQuery = "INSERT INTO movimientos (nombre_usuario, tipo_movimiento, monto) VALUES ('{$_SESSION['nombre_usuario']}', '$tipo_movimiento', $monto)";
+        $conn->query($insertMovimientoQuery);
 
-    // Establece el mensaje de éxito
-    $mensaje_exito = "El movimiento se ha registrado correctamente.";
+        // Actualizar saldo del usuario en la tabla usuarios
+        $updateSaldoQuery = "UPDATE usuarios SET saldo = saldo + CASE WHEN '$tipo_movimiento' = 'ingreso' THEN $monto ELSE -$monto END WHERE nombre_usuario = '{$_SESSION['nombre_usuario']}'";
+        $conn->query($updateSaldoQuery);
+
+        // Establece el mensaje de éxito
+        $mensaje_exito = "El movimiento se ha registrado correctamente.";
+    } else {
+        // El usuario no existe, muestra un mensaje de error
+        echo "El usuario no existe en la tabla de usuarios.";
+    }
 }
 
 // Cerrar conexión
@@ -67,6 +76,24 @@ $conn->close();
             integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
             integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
+    <script>
+        function mostrarMensajeExito(mensaje) {
+            // Eliminar mensajes anteriores
+            var mensajesAnteriores = document.querySelectorAll(".alert");
+            mensajesAnteriores.forEach(function (mensaje) {
+                mensaje.remove();
+            });
+
+            // Crear un elemento div para mostrar el mensaje
+            var mensajeDiv = document.createElement("div");
+            mensajeDiv.className = "alert alert-success";
+            mensajeDiv.innerHTML = mensaje;
+
+            // Insertar el mensaje antes del formulario
+            var formulario = document.querySelector("form");
+            formulario.parentNode.insertBefore(mensajeDiv, formulario);
+        }
+    </script>
 </head>
 
 <body>
@@ -76,7 +103,8 @@ $conn->close();
             <div class="container-fluid">
                 <a class="navbar-brand" href="versaldo.php">
                     <img src="../img/logoBanco.png" alt="Logo del Banco" height="40" class="d-inline-block align-text-top">
-                </a>               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                </a>
+               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -106,11 +134,12 @@ $conn->close();
     
     <!-- Contenido del cuerpo de la página -->
     <div class="container mt-4">
-        <?php if (!empty($mensaje_exito)): ?>
-            <div class="alert alert-success" role="alert">
-                <?php echo $mensaje_exito; ?>
-            </div>
-        <?php endif; ?>
+        <script>
+            // Llamar a la función de JavaScript para mostrar el mensaje de éxito
+            <?php if (!empty($mensaje_exito)): ?>
+                mostrarMensajeExito("<?php echo $mensaje_exito; ?>");
+            <?php endif; ?>
+        </script>
 
         <form method="post" action="">
             <div class="mb-3">

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aprobar_denegar'])) {
     // Actualiza el estado del préstamo en la base de datos
     $servername = "localhost";
     $username = "root";
-    $password = "";
+    $password = "Ign@fervig12";
     $dbname = "ilerbank";
 
     $conn = new mysqli($servername, $username, $password, $dbname);

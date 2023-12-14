@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
 // Tu código de conexión a la base de datos debe ir aquí
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "Ign@fervig12";
 $dbname = "ilerbank";
 
 $conexion = new mysqli($servername, $username, $password, $dbname);

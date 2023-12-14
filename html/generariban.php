@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrar_sesion'])) {
 // Crear la conexión a la base de datos
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "Ign@fervig12";
 $dbname = "ilerbank";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

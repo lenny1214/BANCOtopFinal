@@ -71,7 +71,9 @@ CREATE TABLE mensajes_recibidos (
     FOREIGN KEY (mensaje_id) REFERENCES mensajes(id)
 );
 
-
+-- Conceder privilegios al usuario 'root'
+GRANT ALL PRIVILEGES ON ilerbank.* TO 'root'@'localhost';
+FLUSH PRIVILEGES;
 
 ALTER TABLE usuarios
 ADD COLUMN es_administrador BOOLEAN NOT NULL DEFAULT 0;

@@ -15,7 +15,7 @@ if (!isset($_SESSION['nombre_usuario'])) {
     exit();
 }
 // Conexión a la base de datos
-$conn = new mysqli('localhost', 'root', '', 'ilerbank');
+$conn = new mysqli('localhost', 'root', 'Ign@fervig12', 'ilerbank');
 
 if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);

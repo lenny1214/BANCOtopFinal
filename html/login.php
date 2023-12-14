@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $host = 'localhost';
     $dbname = 'ilerbank';
     $username = 'root';
-    $password = '';
+    $password = 'Ign@fervig12';
     $port = 3306;
 
     $conn = new mysqli($host, $username, $password, $dbname, $port);
